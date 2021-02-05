@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    
+}
+
+header {
+
+    background-color: rgb(40, 47, 150);
+    color: white;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+nav {
+
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+footer {
+
+    background-color: rgb(40, 47, 150);
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.nometi {
+    text-align: center;
+}
+
+.nometi2 {
+    text-align: center;
+}
+
+.butoom {
+    background-color: rgb(40, 47, 150);
+}
+
+.textoeu {
+
+    padding: 6px;
+    text-align: center;
+    color: white;
+
+}
+
+.img {
+
+    text-align: center
+
+}
+
+.box {
+
+    text-align: center;
+    border: 2px solid rgb(40, 47, 150);
+    width: 180px;
+    display: inline-block;
+    margin-top: 5%;
+    margin-left: 185px;
+    margin-bottom: 5%;
+    padding: 8px;
+    border-radius: 10px;
+    
+
+}
+
+.incon {
+
+    display: inline-block;
+    background-color: rgb(40, 47, 150);
+    width: 95px;
+    margin-left: 212px;
+    padding: 10px;
+
+}
+
+.portifolio {
+
+    margin-bottom: 5px;
+    text-align: center;
+
+}
+
+.form {
+
+    border-radius: 10px;
+    border: 2px solid rgb(40, 47, 150);
+    width: 300px;
+    margin: 0 auto;
+    margin-bottom: 5%;
+    padding: 4px;
+
+}
