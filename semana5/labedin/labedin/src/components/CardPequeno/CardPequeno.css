@@ -1,0 +1,33 @@
+.infocard-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+    padding: 20px 10px;
+    margin-bottom: 10px;
+    height: 66px;
+}
+
+.infocard-container > img {
+    width: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+    display: grid;
+}
+
+.infocard-container h4 {
+    margin-bottom: 15px;
+}
+
+.infocard-container p {
+
+
+
+}
+
+.infocard-container > div {
+    display: flex;
+    flex-direction: row;
+    justify-items: flex-start;
+    position: relative;
+    top: 5px;
+}
