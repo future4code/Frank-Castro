@@ -1,36 +1,59 @@
 import React from "react";
-import styled from "styled-components";
+import axios from "axios";
+import styled from "styled-components"
+import { axiosConfig, baseUrl } from "../parameters";
 
-const UserList = styled.div`
+export default class UserListPage extends React.Component {
+    state = {
+        users: []
+    };
 
-`
-
-const UserListItem = styled.div`
-
-`
-
-const DeleteButton = styled.button`
-
-`
-
-export class UserPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
+    componentDidMount() {
+        this.getAllUsers();
     }
+
+    getAllUsers = () => {
+        axios
+        .get(baseUrl, axiosConfig)
+        .then((res) => {
+            this.setState({ users: res.data });
+        })
+        .catch((err) => {
+            console.log(err);
+        }); 
+    }
+
+    deleteUser = (id) => {
+        if (window.confirm("Deseja mesmo deletar o usuário?")) {
+          axios
+            .delete(
+              `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${id}`,
+              axiosConfig
+            )
+            .then((res) => {
+              this.getAllUsers();
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      };
 
     render() {
+        const mapUsers = this.state.users.map((user) => {
+            return (
+              <div key={user.id}>
+                <p>{user.name}</p>
+                <button onClick={() => this.deleteUser(user.id)}>Deletar</button>
+              </div>
+            );
+          });
         return(
-            <UserList>
-                <h2>Lista de usuarios:</h2>
-                    <UserListItem>
-                        <DeleteButton>
-                            x
-                        </DeleteButton>
-                    </UserListItem>
-                ))
-            </UserList>
-        );
+            <div>
+                <h2>Lista de Usuários</h2>
+                {mapUsers}
+            </div>
+        )
     }
-
 }

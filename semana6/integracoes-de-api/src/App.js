@@ -1,42 +1,39 @@
-import React from "react"; 
-import axios from "axios";
-import styled from "styled-components";
-import { UserPage } from "./components/users";
-import { FormPage } from "./components/form";
+import React from "react";
+import UserListPage from "./components/users"
+import FormPage from "./components/form"
+ 
 
-class App extends React.Component {
-  componentDidMount() {
-    this.props.loadUsers();
-  }
-
-  changePage = () => {
-    this.props.updatePage();
+export default class App extends React.Component {
+  state = {
+    page: "form"
   };
 
-  getUserList = () => {
-    axios 
-      .get(
-        "https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users",
-        {
-          headers: {
-            authorization: "frank-castro-cruz"
-          }
-        }
-      ).then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      })
-  }
+  changePage = () => {
+    if (this.state.page === "form") {
+      this.setState({ page: "usersList" });
+    } else if (this.state.page === "usersList") {
+      this.setState({ page: "form" });
+    }
+  };
 
-  render () {
+  renderPage = () => {
+    switch (this.state.page) {
+      case "form":
+        return <FormPage />;
+      case "usersList":
+        return <UserListPage />;
+      default:
+        return <div></div>;
+    }
+  };
+
+  render() {
     return (
-      
-      <UserPage/>
+      <div className="App">
+      <h1>Labeuser</h1>
+      <button onClick={this.changePage}>trocar de página</button>
+      {this.renderPage()}
+      </div>
     )
   }
-
 }
-
-export default App;
