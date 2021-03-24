@@ -3,6 +3,22 @@ import axios from "axios";
 import styled from "styled-components"
 import { axiosConfig, baseUrl } from "../parameters";
 
+const ListConteiner = styled.ul`
+
+`
+
+const List = styled.li`
+  display: flex;
+  width: 20%;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+  padding: 10px 0;
+`
+const Button = styled.button`
+   
+`
+
+
 export default class UserListPage extends React.Component {
     state = {
         users: []
@@ -43,17 +59,17 @@ export default class UserListPage extends React.Component {
     render() {
         const mapUsers = this.state.users.map((user) => {
             return (
-              <div key={user.id}>
-                <p>{user.name}</p>
-                <button onClick={() => this.deleteUser(user.id)}>Deletar</button>
-              </div>
+              <List key={user.id}>
+                <ul>{user.name}</ul>
+                <Button onClick={() => this.deleteUser(user.id)}>X</Button>
+              </List>
             );
           });
         return(
-            <div>
+            <ListConteiner>
                 <h2>Lista de Usuários</h2>
                 {mapUsers}
-            </div>
+            </ListConteiner>
         )
     }
 }

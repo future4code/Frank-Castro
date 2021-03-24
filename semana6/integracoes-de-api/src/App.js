@@ -30,7 +30,6 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-      <h1>Labeuser</h1>
       <button onClick={this.changePage}>trocar de página</button>
       {this.renderPage()}
       </div>

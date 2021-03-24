@@ -3,6 +3,44 @@ import axios from "axios";
 import styled from "styled-components"
 import { axiosConfig, baseUrl } from "../parameters";
 
+const FormConteiner = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  width: 20%;
+  margin: 0 auto;
+  padding: 30px;
+
+  div {
+    margin-bottom: 15px;
+  }
+`
+const Input = styled.input`
+margin: 5px
+
+` 
+const Titulo = styled.h2`
+text-align: center;
+margin: 5px;
+`
+
+const Button = styled.button`
+margin: 0 auto;
+background-color: hsl(236,32%,26%);
+color: white;
+border: none;
+z-index: 1;
+position: relative;
+font-size: inherit;
+font-family: inherit;
+color: white;
+padding: 0.5em 1em;
+outline: none;
+border: none;
+overflow: hidden;
+cursor: pointer;
+`
+
 export default class FormPage extends React.Component {
   state = {
     name: "",
@@ -38,20 +76,20 @@ export default class FormPage extends React.Component {
   }
     render() {
         return(
-            <div>
-                <h2>Criar usuário</h2>
-                <input
+            <FormConteiner>
+                <Titulo>Criar usuário</Titulo>
+                <Input
                 onChange={this.eventName}
                 value={this.state.name}
                 placeholder="Nome"
                 />
-                <input
+                <Input
                 onChange={this.eventEmail}
                 value={this.state.email}
                 placeholder="Email"
                 />
-                <button onClick={this.createrUser}>Criar</button>
-            </div>
+                <Button onClick={this.createrUser}>Criar</Button>
+            </FormConteiner>
         )
     }
 }
