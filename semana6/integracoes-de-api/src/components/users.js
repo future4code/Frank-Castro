@@ -6,8 +6,16 @@ import { axiosConfig, baseUrl } from "../parameters";
 const ListConteiner = styled.ul`
 
 `
+const Titulo = styled.h2`
+width: 192px; 
+  margin-left: auto;
+  margin-right: auto;
+`
 
 const List = styled.li`
+  width: 700px; 
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   width: 20%;
   justify-content: space-between;
@@ -67,7 +75,7 @@ export default class UserListPage extends React.Component {
           });
         return(
             <ListConteiner>
-                <h2>Lista de Usuários</h2>
+                <Titulo>Lista de Usuários</Titulo>
                 {mapUsers}
             </ListConteiner>
         )
