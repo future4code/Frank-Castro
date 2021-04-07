@@ -1,22 +1,30 @@
-
+import React, {useState, useEffect} from "react"
+import TelaInicial from "./paginas/TelaInicial"
+import TelaMatches from "./paginas/TelaMatches"
 
 function App() {
+  const [telaAtual, setTelaAtual] = useState("inicial")
+  
+
+  const renderizarPagina = () => {
+    if(telaAtual === "inicial") {
+      return <TelaInicial 
+          mudarPagina={mudarPagina}
+        />
+    } else if(telaAtual === "matches") {
+      return <TelaMatches
+          mudarPagina={mudarPagina}
+      />
+    }
+}
+
+  const mudarPagina = (novaPagina) => {
+    setTelaAtual(novaPagina) 
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        {renderizarPagina()}
     </div>
   );
 }
