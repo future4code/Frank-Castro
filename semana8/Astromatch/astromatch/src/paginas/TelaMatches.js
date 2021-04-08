@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react"
+import {A, BotaoCima, BotaoLimpar, BotaoMatches, CardMatches, ImageCard, NomeCard} from "../estilo"
 import url from "../parametros"
 import axios from "axios"
 
@@ -22,20 +23,20 @@ function TelaMatches(props) {
     }, [])
 
     return(
-        <div>
-        <div>
-            <button onClick={props.limparMatches}>Limpar Matches</button>
-            <button onClick={() => props.mudarPagina('inicial')}>Inicial</button>
-        </div>
+        <A>
+        <BotaoCima>
+            <BotaoLimpar onClick={props.limparMatches}>Limpar Matches</BotaoLimpar>
+            <BotaoMatches onClick={() => props.mudarPagina('inicial')}>Inicial</BotaoMatches>
+        </BotaoCima>
         {(matches.length === 0 && carregado) && <div><h1>Você não possui Matches</h1></div>}
         {carregado ? matches.map((profile) => {
             return (
-                <div>
-                    <img src={profile.photo} alt="Foto de Perfil"/>
-                    <h1>{profile.name}</h1>
-                </div>)
+                <CardMatches>
+                    <ImageCard src={profile.photo} alt="Foto de Perfil"/>
+                    <NomeCard>{profile.name}</NomeCard>
+                </CardMatches>)
         }): <div><h1>Carregando...</h1></div>}
-    </div>
+    </A>
 )
 }
 

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react"
 import TelaInicial from "./paginas/TelaInicial"
 import TelaMatches from "./paginas/TelaMatches"
+import {DivGlobal} from "./estilo"
 import url from "./parametros"
 import axios from "axios"
 
@@ -38,9 +39,9 @@ function App() {
   }
 
   return (
-    <div>
+    <DivGlobal>
         {renderizarPagina()}
-    </div>
+    </DivGlobal>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react"
+import {BotaoCima, BotaoBaixo, BotaoMatches, BotaoLimpar, Card, CardPerfil, Imagem, Nome, Idade, Bio, Info, Sim, Nao} from "../estilo"
 import url from "../parametros"
 import axios from "axios";
 
@@ -41,22 +42,27 @@ function TelaInicial(props) {
     },[])
 
     return(
-        <div>
-            <div>
-                <button onClick={() => props.mudarPagina("matches") } >matches</button>
-                <button onClick={props.limparMatches}>limpar</button>
-            </div>
-            {!carregado && <h1>Carregando...</h1>}
-            {(carregado && !profile) && <h1>Não há mais usuários disponíveis</h1>}
-            {(carregado && profile) && <h1>{profile.name}, {profile.age}</h1>}
-            {(carregado && profile) && <h3>{profile.bio}</h3>}
-            {(carregado && profile) && <img src={profile.photo} alt="Foto"/>}
-            <div>
-                <button onClick={() => escolherPessoa(true)}>sim</button>
-                <button onClick={() => escolherPessoa(false)}>não</button>
-            </div>
+        <Card>
+            <BotaoCima>
+                <BotaoLimpar onClick={props.limparMatches}>limpar</BotaoLimpar>
+                <BotaoMatches onClick={() => props.mudarPagina("matches") } >matches</BotaoMatches>
+            </BotaoCima>
+            <CardPerfil>
+                {!carregado && <h1>Carregando...</h1>}
+                {(carregado && !profile) && <h1>Não há mais usuários disponíveis</h1>}
+                <Info>
+                {(carregado && profile) && <Imagem src={profile.photo} alt="Foto"/>}
+                    {(carregado && profile) && <Nome>{profile.name},</Nome>}
+                    {(carregado && profile) && <Idade> {profile.age}</Idade>}
+                    {(carregado && profile) && <Bio>{profile.bio}</Bio>}
+                </Info>
+            <BotaoBaixo>
+                <Nao onClick={() => escolherPessoa(false)}>X</Nao>
+                <Sim onClick={() => escolherPessoa(true)}>♥️</Sim>
+            </BotaoBaixo>
+            </CardPerfil>
            
-        </div>
+        </Card>
     )
 }
 
