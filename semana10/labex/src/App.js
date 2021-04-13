@@ -1,13 +1,10 @@
-import { useState } from "react";
 import React from "react";
-import HomePage from "./pages/HomePage"
-import ListaViagens from "./pages/ListTripsPage"
-
+import Router from "./routes/Routes"
 
 const App = () => {
   return (
     <div>
-      <ListaViagens/>
+      <Router />
     </div>
   );
 }

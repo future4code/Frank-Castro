@@ -1,16 +1,20 @@
 import { useState } from "react";
 import React from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components'
+import { goToAdminHomePage, goToListTripsPage, goToTripDetailsPage } from "../routes/coordinator"
 
 const HomePage = () => {
+  const history = useHistory();
     return (
       <div>
         <Titulo>LabeX</Titulo>
-        <Botao>
-        <AdmBotao>Ver Área de Admin</AdmBotao>
-        <AdmViagem>Ver Viagens</AdmViagem>
-        </Botao>
+          <Botao>
+            <AdmViagem onClick={() => goToListTripsPage(history)}>Ver Viagens</AdmViagem>
+            <AdmBotao onClick={() => goToAdminHomePage(history)}>Área de Admin</AdmBotao>
+          </Botao>
+          <button onClick={() => goToTripDetailsPage(history)}>ir para detalhes da viagem(temporario)</button>
       </div>
     );
 }
@@ -18,7 +22,9 @@ const HomePage = () => {
   export default HomePage;
 
 const Titulo = styled.h1`
-text-align: center
+text-align: center;
+font-family: 'Roboto Mono', monospace;
+color:slategray;
 `
 
 const Botao = styled.div`
@@ -28,14 +34,21 @@ justify-content: space-evenly;
 
 const AdmViagem = styled.button`
 background: #5B76FF;
-border-radius: 10px;
+border-radius: 20px;
 width: 251px;
 height: 49px;
+font-family: 'Roboto Mono', monospace;
+font-size: 24px;
+border: none;
 `
 
 const AdmBotao = styled.button`
 background: #5B76FF;
-border-radius: 10px;
+border-radius: 20px;
 width: 251px;
 height: 49px;
+font-size: 24px;
+font-family: 'Roboto Mono', monospace;
+font-size: 24px;
+border: none;
 `
