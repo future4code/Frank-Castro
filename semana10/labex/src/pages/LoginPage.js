@@ -1,20 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from 'styled-components'
 import { useHistory } from "react-router-dom";
-import { goToAdminHomePage } from "../routes/coordinator"
+import axios from "axios";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const history = useHistory();
+
+  const pegarEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const pegarSenha = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const login = () => {
+    const body = {
+      email: email,
+      password: password
+    };
+
+    axios
+      .post(
+        "https://us-central1-labenu-apis.cloudfunctions.net/labeX/frank-castro-cruz/login",
+        body
+      )
+      .then((res) => {
+        console.log(res.data);
+        window.localStorage.setItem('token', res.data.token)
+        history.push('/home-adm')
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <Titulo>Login</Titulo>
       <Form>
-        <Input placeholder="E-mail"/>
-        <Input placeholder="Senha"/>
+        <Input value={email} onChange={pegarEmail} placeholder="E-mail"/>
+        <Input value={password} onChange={pegarSenha} placeholder="Senha"/>
       </Form>
       <Botao>
         <Voltar onClick={history.goBack}>Voltar</Voltar>
-        <Entrar onClick={() => goToAdminHomePage(history)}>entrar</Entrar>
+        <Entrar onClick={login}>entrar</Entrar>
       </Botao>
     </>
   );

@@ -31,22 +31,24 @@ font-family: 'Roboto Mono', monospace;
 color:slategray;
 `
 const Enviar = styled.button`
-background: #5B76FF;
+margin: 15px;
+height: 40px;
+padding: 0px 20px;
 border-radius: 20px;
-width: 251px;
-height: 49px;
-font-family: 'Roboto Mono', monospace;
-font-size: 24px;
 border: none;
+font-size: 16px;
+background-color: #5B76FF;
+min-width: 100px;
 `
 const Voltar = styled.button`
-background: #5B76FF;
+margin: 15px;
+height: 40px;
+padding: 0px 20px;
 border-radius: 20px;
-width: 251px;
-height: 49px;
-font-family: 'Roboto Mono', monospace;
-font-size: 24px;
 border: none;
+font-size: 16px;
+background-color: #5B76FF;
+min-width: 100px;
 `
 const Form = styled.form`
 display: flex;
@@ -64,8 +66,7 @@ margin: 0px 0px 15px;
 `
 const Botao = styled.div`
 display: flex;
-justify-content: space-evenly;
-padding: 30px;
+justify-content: center;
 `
 const Select = styled.select`
   width: 518px;

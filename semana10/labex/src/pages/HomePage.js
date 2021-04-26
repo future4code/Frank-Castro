@@ -3,7 +3,7 @@ import React from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import styled from 'styled-components'
-import { goToAdminHomePage, goToListTripsPage, goToTripDetailsPage } from "../routes/coordinator"
+import { goToLoginPage, goToListTripsPage, goToTripDetailsPage } from "../routes/coordinator"
 
 const HomePage = () => {
   const history = useHistory();
@@ -11,8 +11,8 @@ const HomePage = () => {
       <div>
         <Titulo>LabeX</Titulo>
           <Botao>
-            <AdmViagem onClick={() => goToListTripsPage(history)}>Ver Viagens</AdmViagem>
-            <AdmBotao onClick={() => goToAdminHomePage(history)}>Área de Admin</AdmBotao>
+            <ViagemBotao onClick={() => goToListTripsPage(history)}>Ver Viagens</ViagemBotao>
+            <AdmBotao onClick={() => goToLoginPage(history)}>Área de Admin</AdmBotao>
           </Botao>
           <button onClick={() => goToTripDetailsPage(history)}>ir para detalhes da viagem(temporario)</button>
       </div>
@@ -32,9 +32,9 @@ display: flex;
 justify-content: space-evenly;
 `
 
-const AdmViagem = styled.button`
+const ViagemBotao = styled.button`
 background: #5B76FF;
-border-radius: 20px;
+border-radius: 30px;
 width: 251px;
 height: 49px;
 font-family: 'Roboto Mono', monospace;
@@ -44,7 +44,7 @@ border: none;
 
 const AdmBotao = styled.button`
 background: #5B76FF;
-border-radius: 20px;
+border-radius: 30px;
 width: 251px;
 height: 49px;
 font-size: 24px;
