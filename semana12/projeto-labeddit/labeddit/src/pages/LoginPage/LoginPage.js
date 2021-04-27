@@ -4,14 +4,16 @@ import Button from '@material-ui/core/Button'
 import { goToFeedPage, goToRegisterPage } from "../../routes/coordinator"
 import { ScreenContainer, SignUpButtonContainer } from "./styled";
 import { LoginForm } from "./LoginForm";
+import useUnprotectedPage from "../../hooks/useUnprotectedPage";
 
-export const LoginPage = () => {
+export const LoginPage = ({rightButtonText, setRightButtonText}) => {
+  useUnprotectedPage()
     const history = useHistory()
 
   return (
     <div>
         <ScreenContainer>
-          <LoginForm/>
+          <LoginForm  rightButtonText={rightButtonText} setRightButtonText={setRightButtonText}/>
         <SignUpButtonContainer>
           <Button
             onClick={() => goToRegisterPage(history)}

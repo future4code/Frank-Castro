@@ -1,14 +1,15 @@
 import React from "react"
-import { useHistory } from "react-router";
-import { goToFeedPage } from "../../routes/coordinator"
+import { ScreenContainer, SignUpButtonContainer } from "./styled";
+import { RegisterForm } from "./RegisterForm";
+import useUnprotectedPage from "../../hooks/useUnprotectedPage";
 
 export const RegisterPage = () => {
-    const history = useHistory()
+  useUnprotectedPage()
   return (
     <div>
-        <p>RegisterPage</p>
-        <button onClick={() => goToFeedPage(history)}>ir</button>
-        <button onClick={history.goBack}>voltar</button>
+       <ScreenContainer>
+          <RegisterForm/>
+        </ScreenContainer>
     </div>
   )
 }

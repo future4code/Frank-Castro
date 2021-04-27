@@ -4,13 +4,15 @@ import { useHistory } from "react-router";
 import Button from '@material-ui/core/Button'
 import { InputsContainer} from "./styled";
 import useForm from "../../hooks/useForm"
+import { login } from "../../requests/resquestsLabeddit"
 
-export const LoginForm = () => {
+export const LoginForm = ({rightButtonText, setRightButtonText} ) => {
   const [form, onChange, clear] = useForm({email: "", password: ""})
-    const history = useHistory()
+  const history = useHistory()
 
     const onSubmitForm = (event) => {
         event.preventDefault()
+        login(form, clear, history, setRightButtonText)
     }
 
   return (

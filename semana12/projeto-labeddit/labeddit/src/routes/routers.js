@@ -4,12 +4,9 @@ import { LoginPage} from "../pages/LoginPage/LoginPage"
 import { RegisterPage } from "../pages/RegisterPage/RegisterPage"
 import { FeedPage } from "../pages/FeedPage/FeedPage"
 import { PostPage } from "../pages/PostPage/PostPage" 
-import Header from "../componetes/header/header"
 
-export const Router = () => {
+export const Router = ({rightButtonText, setRightButtonText}) => {
     return(
-        <BrowserRouter>
-            <Header/>
             <Switch>
                 <Route exact path="/">
                     <FeedPage />
@@ -18,7 +15,7 @@ export const Router = () => {
                     <PostPage />
                 </Route>
                 <Route exact path="/Login">
-                    <LoginPage />
+                    <LoginPage rightButtonText={rightButtonText} setRightButtonText={setRightButtonText} />
                 </Route>
                 <Route exact path="/Register">
                     <RegisterPage />
@@ -27,6 +24,5 @@ export const Router = () => {
 
                 </Route>
             </Switch>
-        </BrowserRouter>
     )
 }
