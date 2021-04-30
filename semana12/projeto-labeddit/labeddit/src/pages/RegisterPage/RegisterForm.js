@@ -6,13 +6,13 @@ import { InputsContainer, SignUpFormContainer} from "./styled";
 import useForm from "../../hooks/useForm"
 import { signUp } from "../../requests/resquestsLabeddit";
 
-export const RegisterForm = () => {
+export const RegisterForm = ({setRightButtonText}) => {
     const [form, onChange, clear] = useForm({ username: '', email: '', password: '' })
     const history = useHistory()
 
     const onSubmitForm = (event) => {
         event.preventDefault()
-        signUp(form, clear, history)
+        signUp(form, clear, history, setRightButtonText)
     }
 
   return (

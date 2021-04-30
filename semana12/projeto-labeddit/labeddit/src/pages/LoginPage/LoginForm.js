@@ -6,7 +6,7 @@ import { InputsContainer} from "./styled";
 import useForm from "../../hooks/useForm"
 import { login } from "../../requests/resquestsLabeddit"
 
-export const LoginForm = ({rightButtonText, setRightButtonText} ) => {
+export const LoginForm = ({setRightButtonText}) => {
   const [form, onChange, clear] = useForm({email: "", password: ""})
   const history = useHistory()
 

@@ -6,14 +6,14 @@ import { ScreenContainer, SignUpButtonContainer } from "./styled";
 import { LoginForm } from "./LoginForm";
 import useUnprotectedPage from "../../hooks/useUnprotectedPage";
 
-export const LoginPage = ({rightButtonText, setRightButtonText}) => {
+export const LoginPage = ({setRightButtonText}) => {
   useUnprotectedPage()
     const history = useHistory()
 
   return (
     <div>
         <ScreenContainer>
-          <LoginForm  rightButtonText={rightButtonText} setRightButtonText={setRightButtonText}/>
+          <LoginForm setRightButtonText={setRightButtonText}/>
         <SignUpButtonContainer>
           <Button
             onClick={() => goToRegisterPage(history)}
