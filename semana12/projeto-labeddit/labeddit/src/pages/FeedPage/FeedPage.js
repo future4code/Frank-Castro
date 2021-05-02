@@ -6,6 +6,7 @@ import useRequestData from "../../hooks/useRequestData";
 import { CardForm } from "../FeedPage/FeedForm"
 import BASE_URL from "../../constants/urls"
 import { goToPostPage } from "../../routes/coordinator"
+import { Body } from "../FeedPage/styled"
 
 export const FeedPage = () => {
   useProtectedPage()
@@ -31,9 +32,9 @@ export const FeedPage = () => {
   })
 
   return (
-    <div>
+    <Body>
           <CardForm/>
           {postCards}
-    </div>
+    </Body>
   )
 }

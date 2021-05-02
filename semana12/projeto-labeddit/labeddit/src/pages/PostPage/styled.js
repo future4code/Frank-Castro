@@ -17,3 +17,7 @@ export const RecipeContainer = styled.div`
   max-width: 600px;
   min-width: 300px;
 `
+
+export const CardComment = styled.div`
+
+` 

@@ -15,3 +15,8 @@ export const InputsContainer = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `
+
+export const Body = styled.div`
+    /* background-color: #DAD8D8;
+    height: 100%; */
+`
