@@ -1,31 +1,33 @@
-import React from "react"
-import { useHistory } from "react-router";
-import Button from '@material-ui/core/Button'
-import { goToFeedPage, goToRegisterPage } from "../../routes/coordinator"
-import { ScreenContainer, SignUpButtonContainer } from "./styled";
-import { LoginForm } from "./LoginForm";
+import React from "react";
+import { ScreenContainer, SignUpButtonContainer, LogoImage } from "./styled";
+import logo from "../../assets/images/logo.png";
+import Button from "@material-ui/core/Button";
+import LoginForm from "./LoginForm";
+import { goToRegisterPage } from "../../routes/coordinator";
+import { useHistory } from "react-router-dom";
 import useUnprotectedPage from "../../hooks/useUnprotectedPage";
+import AlertModified from "../../componetes/Alert";
 
-export const LoginPage = ({setRightButtonText}) => {
-  useUnprotectedPage()
-    const history = useHistory()
-
+const LoginPage = () => {
+  useUnprotectedPage();
+  const history = useHistory();
   return (
-    <div>
-        <ScreenContainer>
-          <LoginForm setRightButtonText={setRightButtonText}/>
-        <SignUpButtonContainer>
-          <Button
-            onClick={() => goToRegisterPage(history)}
-            type={"submit"}
-            fullWidth
-            variant={"texte"}
-            color={"primary"}
-            >Ainda não tem um cadastro ?
-          </Button>
-        </SignUpButtonContainer>
-        </ScreenContainer>
+    <ScreenContainer>
+      <LoginForm />
+      <SignUpButtonContainer>
+        <Button
+          type={"submit"}
+          fullWidth
+          variant={"text"}
+          color={"primary"}
+          onClick={() => goToRegisterPage(history)}
+        >
+          Sign Up
+        </Button>
+      </SignUpButtonContainer>
+      <AlertModified />
+    </ScreenContainer>
+  );
+};
 
-    </div>
-  )
-}
+export default LoginPage;

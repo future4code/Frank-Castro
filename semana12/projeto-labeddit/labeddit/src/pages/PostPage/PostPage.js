@@ -1,123 +1,325 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router";
+import React, { useEffect, useContext, useState } from "react";
+import {
+  ScreenContainer,
+  PostCardContainer,
+  InputsContainer,
+  CommentContainer,
+} from "./styled";
 import useProtectedPage from "../../hooks/useProtectedPage";
-import useRequestData from "../../hooks/useRequestData";
-import BASE_URL from "../../constants/urls"
-import { ScreenContainer, RecipeContainer, CardComment } from "./styled"
-import down from "../../imgs/down.png"
-import downAlt from "../../imgs/downAlt.png"
-import up from "../../imgs/up.png"
-import upAlt from "../../imgs/upAlt.png"
-import Typography from '@material-ui/core/Typography'
-import axios from "axios"
+import { useParams } from "react-router-dom";
+import BASE_URL from "../../constants/urls";
+import axios from "axios";
+import GlobalStateContext from "../../global/GlobalStateContext";
+import Loader from "../../componetes/Loader";
+import Pagination from "../../componetes/Pagination";
+import CommentCard from "../../componetes/CommentCard/CommentCard";
+import TextField from "@material-ui/core/TextField";
+import useForm from "../../hooks/useForm";
+import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
+import AlertModified from "../../componetes/Alert";
+import PostCard from "../../componetes/PostCard/PostCard";
 
-export const PostPage = () => {
-  useProtectedPage()
+const PostPage = () => {
+  useProtectedPage();
+  const params = useParams();
+  const history = useHistory();
 
-  const formDefault = {text: ""}
-  const history = useHistory()
-  const [form, setForm] = useState(formDefault)
-  const params = useParams()
-  const [post, setPosts] = useState({})
-  const [loading, setLoading] = useState(true)
+  const [postDetails, setPostDetails] = useState({});
+  const [postComments, setPostComments] = useState([]);
+
+  const {
+    loading,
+    setLoading,
+    currentPage,
+    postsPerPage,
+    setOpenAlert,
+    setAlertMsg,
+    setAlertSeverity,
+    setCurrentPage,
+  } = useContext(GlobalStateContext);
+
+  const [form, onChange, clear] = useForm({
+    text: "",
+  });
+
+  const onSubmitForm = (event) => {
+    event.preventDefault();
+    newComment(form, clear, history);
+  };
+
+  const getPostDetails = () => {
+    axios
+      .get(`${BASE_URL}/posts/${params.id}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setPostDetails(res.data.post);
+        setPostComments(res.data.post.comments);
+        console.log(res.data)
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        alert("Error getting post details!");
+      });
+  };
+
+  const newComment = (body, clear, history) => {
+    axios
+      .post(`${BASE_URL}/posts/${params.id}/comment`, body, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        clear();
+        console.log(res);
+        getPostDetails();
+      })
+      .catch((err) => {
+        setAlertMsg(err.response.data.message);
+        setAlertSeverity("error");
+        setOpenAlert(true);
+      });
+  };
 
   useEffect(() => {
-    getPostDetails()
-  }, [])
+    setLoading(true);
+    setCurrentPage(1);
+    getPostDetails();
+  }, []);
 
-  const getPostDetails = async () => {
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
 
-    const headers = {headers: {Authorization: window.localStorage.getItem("token")}}
+  const sortComments = postComments.sort((a, b) => {
+    return b.createdAt - a.createdAt;
+  });
 
-    try {
-        const response = await axios.get(`${BASE_URL}/posts/${params.postId}`, headers)
-        setPosts(response.data.post)
-        setLoading(false)
+  const currentComments = sortComments.slice(indexOfFirstPost, indexOfLastPost);
+
+  const upvoteComment = (comment) => {
+    if (comment.userVoteDirection > 0) {
+      unvoteComment(comment);
+    } else {
+      const body = {
+        direction: 1,
+      };
+      axios
+        .put(
+          `${BASE_URL}/posts/${params.id}/comment/${comment.id}/vote`,
+          body,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          setAlertMsg("Comment upvoted successfully");
+          setAlertSeverity("success");
+          setOpenAlert(true);
+          getPostDetails();
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
-    catch (error) {
-        console.log(error)
+  };
+
+  const downvoteComment = (comment) => {
+    if (comment.userVoteDirection < 0) {
+      unvoteComment(comment);
+    } else {
+      const body = {
+        direction: -1,
+      };
+      axios
+        .put(
+          `${BASE_URL}/posts/${params.id}/comment/${comment.id}/vote`,
+          body,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          setAlertMsg("Comment downvoted successfully");
+          setAlertSeverity("success");
+          setOpenAlert(true);
+          getPostDetails();
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
-}
+  };
 
-const onChange = (event) => {
-  const {name, value} = event.target
-  setForm({...form, [name]: value})
-}
+  const unvoteComment = (comment) => {
+    const body = {
+      direction: 0,
+    };
+    axios
+      .put(`${BASE_URL}/posts/${params.id}/comment/${comment.id}/vote`, body, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setAlertMsg("Unvoted sucessfully");
+        setAlertSeverity("success");
+        setOpenAlert(true);
+        getPostDetails();
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
-const createComment = async (event) => {
-
-  event.preventDefault()
-
-  const headers = {headers: {Authorization: window.localStorage.getItem("token")}}
-
-  try {
-      await axios.post(`${BASE_URL}/posts/${params.postId}/comment`, form, headers)
-      window.alert("Comentário Criado com Sucesso!")
-      getPostDetails()
-      setForm(formDefault)
-  }
-  catch(error) {
-      console.log(error)
-  }
-}
-
-  const votePost = async (postId, direction) => {
-
-    const headers = {headers: {Authorization: window.localStorage.getItem("token")}}
-
-    try {
-        await axios.put(`${BASE_URL}/posts/${postId}/vote`, {direction}, headers)
-        getPostDetails()
+  const upvotePost = (post) => {
+    if (post.userVoteDirection > 0) {
+      unvotePost(post);
+    } else {
+      const body = {
+        direction: 1,
+      };
+      axios
+        .put(`${BASE_URL}/posts/${post.id}/vote`, body, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          setAlertMsg("Post upvoted successfully");
+          setAlertSeverity("success");
+          setOpenAlert(true);
+          getPostDetails();
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
-    catch (error) {
-        console.log(error)
-      }
+  };
+
+  const downvotePost = (post) => {
+    if (post.userVoteDirection < 0) {
+      unvotePost(post);
+    } else {
+      const body = {
+        direction: -1,
+      };
+      axios
+        .put(`${BASE_URL}/posts/${post.id}/vote`, body, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          setAlertMsg("Post downvoted successfully");
+          setAlertSeverity("success");
+          setOpenAlert(true);
+          getPostDetails();
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
+  };
 
-    const voteComment = async (commentId, direction) => {
+  const unvotePost = (post) => {
+    const body = {
+      direction: 0,
+    };
+    axios
+      .put(`${BASE_URL}/posts/${post.id}/vote`, body, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setAlertMsg("Unvoted sucessfully");
+        setAlertSeverity("success");
+        setOpenAlert(true);
+        getPostDetails();
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
-      const headers = {headers: {Authorization: window.localStorage.getItem("token")}}
+  const commentsCards = currentComments.map((comment) => {
+    var date = new Date(comment.createdAt);
+    return (
+      <CommentCard
+        key={comment.id}
+        text={comment.text}
+        votesCount={comment.votesCount}
+        username={comment.username}
+        createdAt={date.toLocaleDateString()}
+        userVoteDirection={comment.userVoteDirection}
+        onClickUpvote={() => upvoteComment(comment)}
+        onClickDownvote={() => downvoteComment(comment)}
+      />
+    );
+  });
 
-      try {
-          await axios.put(`${BASE_URL}/posts/${params.postId}/comment/${commentId}/vote`, {direction}, headers)
-          getPostDetails()
-      }
-      catch (error) { 
-          console.log("error")
-        }
-      }
+  var date = new Date(postDetails.createdAt);
 
   return (
-    <div>
-      <ScreenContainer>
-      {post &&
-          <RecipeContainer>
-              <Typography gutterBottom align={'center'} variant={'h5'} color={'secondaryColor'}>{post.title}</Typography>
-              <Typography align={'center'}>{post.text}</Typography>
-              <p>
-              {post.userVoteDirection === 1 ? <img src={upAlt} onClick={() => votePost(post.id, 0)}/> : <img src={up} onClick={() => votePost(post.id, 1)}/>}
-              {post.votesCount}
-              {post.userVoteDirection === -1 ? <img src={downAlt} onClick={() => votePost(post.id, 0)}/> : <img src={down} onClick={() => votePost(post.id, -1)}/>}
-              {!loading && <form onSubmit={createComment}>
-                <input name="text" type="text" value={form.text} onChange={onChange} placeholder="Comentário" required/>
-                <button>Comentar</button><hr/>
-              </form>}
+    <ScreenContainer>
+      {loading ? (
+        <Loader />
+      ) : (
+        <PostCardContainer>
+          <PostCard
+            key={postDetails.id}
+            title={postDetails.title}
+            text={postDetails.text}
+            votesCount={postDetails.votesCount}
+            username={postDetails.username}
+            createdAt={date.toLocaleDateString()}
+            commentsCount={postDetails.commentsCount}
+            userVoteDirection={postDetails.userVoteDirection}
+            onClickUpvote={() => upvotePost(postDetails)}
+            onClickDownvote={() => downvotePost(postDetails)}
+          />
 
-              </p>
-              {post.comments && post.comments.map((comment) => {
-              return <div key={comment.id}>
-                  <h1>{comment.username}: {comment.text}</h1>
-                  <p>
-                    {comment.userVoteDirection === 1 ? <img src={upAlt} onClick={() => voteComment(comment.id, 0)}/> : <img src={up} onClick={() => voteComment(comment.id, 1)}/>}
-                        {comment.votesCount}
-                    {comment.userVoteDirection === -1 ? <img src={downAlt} onClick={() => voteComment(comment.id, 0)}/> : <img src={down} onClick={() => voteComment(comment.id, -1)}/>}
-                  </p>
-                  <hr/>
-                  </div>
-              })}
-          </RecipeContainer>}
-      </ScreenContainer>
-      
-    </div>
-  )
-}
+          <CommentContainer>
+            <form onSubmit={onSubmitForm}>
+              <InputsContainer>
+                <TextField
+                  name={"text"}
+                  value={form.text}
+                  onChange={onChange}
+                  label={"New comment"}
+                  variant={"outlined"}
+                  fullWidth
+                  margin={"normal"}
+                  required
+                />
+              </InputsContainer>
+              <Button
+                type={"submit"}
+                fullWidth
+                variant={"contained"}
+                color={"primary"}
+              >
+                Comment
+              </Button>
+            </form>
+          </CommentContainer>
+          <div>{commentsCards}</div>
+          <Pagination totalPosts={postComments.length} />
+        </PostCardContainer>
+      )}
+
+      <AlertModified />
+    </ScreenContainer>
+  );
+};
+
+export default PostPage;

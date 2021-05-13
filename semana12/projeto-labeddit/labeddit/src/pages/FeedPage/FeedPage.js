@@ -1,40 +1,208 @@
-import React from "react"
-import { useHistory } from "react-router-dom"
+import React, { useEffect, useContext } from "react";
+import {
+  ScreenContainer,
+  PostsContainer,
+  AddPostButton,
+  InputDiv,
+} from "./styled";
 import useProtectedPage from "../../hooks/useProtectedPage";
-import { PostCard } from "../../componetes/cardPost/cardPost"
-import useRequestData from "../../hooks/useRequestData";
-import { CardForm } from "../FeedPage/FeedForm"
-import BASE_URL from "../../constants/urls"
-import { goToPostPage } from "../../routes/coordinator"
-import { Body } from "../FeedPage/styled"
+import PostCard from "../../componetes/PostCard/PostCard";
+import BASE_URL from "../../constants/urls";
+import GlobalStateContext from "../../global/GlobalStateContext";
+import axios from "axios";
+import Loader from "../../componetes/Loader";
+import Pagination from "../../componetes/Pagination";
+import { goToCreatePostPage, goToPostPage } from "../../routes/coordinator";
+import { useHistory } from "react-router-dom";
+import { Add } from "@material-ui/icons";
+import AlertModified from "../../componetes/Alert";
+import useInput from "../../hooks/useInput";
+import TextField from "@material-ui/core/TextField";
 
-export const FeedPage = () => {
-  useProtectedPage()
-  const history = useHistory()
-  const posts = useRequestData([], `${BASE_URL}/posts`)
-  console.log(posts)
+const FeedPage = () => {
+  useProtectedPage();
+  const {
+    loading,
+    setLoading,
+    posts,
+    setPosts,
+    currentPage,
+    setCurrentPage,
+    postsPerPage,
+    setAlertMsg,
+    setAlertSeverity,
+    setOpenAlert,
+  } = useContext(GlobalStateContext);
+  const history = useHistory();
 
-  const onClickPost = (id) => {
-    goToPostPage(history, id)
-    console.log(id)
-  }
-  
-  const postCards = posts.posts && posts.posts.map((post) => {
+  const [search, setSearch] = useInput("");
+
+  const onClickCard = (id) => {
+    goToPostPage(history, id);
+  };
+
+  const getPosts = () => {
+    axios
+      .get(`${BASE_URL}/posts`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setPosts(res.data.posts);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  const upvotePost = (post) => {
+    if (post.userVoteDirection > 0) {
+      unvotePost(post);
+    } else {
+      const body = {
+        direction: 1,
+      };
+      axios
+        .put(`${BASE_URL}/posts/${post.id}/vote`, body, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          setAlertMsg("Post upvoted successfully");
+          setAlertSeverity("success");
+          setOpenAlert(true);
+          getPosts();
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+
+  const downvotePost = (post) => {
+    if (post.userVoteDirection < 0) {
+      unvotePost(post);
+    } else {
+      const body = {
+        direction: -1,
+      };
+      axios
+        .put(`${BASE_URL}/posts/${post.id}/vote`, body, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          setAlertMsg("Post downvoted successfully");
+          setAlertSeverity("success");
+          setOpenAlert(true);
+          getPosts();
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  };
+
+  const unvotePost = (post) => {
+    const body = {
+      direction: 0,
+    };
+    axios
+      .put(`${BASE_URL}/posts/${post.id}/vote`, body, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setAlertMsg("Unvoted sucessfully");
+        setAlertSeverity("success");
+        setOpenAlert(true);
+        getPosts();
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  useEffect(() => {
+    getPosts();
+    setLoading(true);
+    setCurrentPage(1);
+  }, []);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+
+  const sortPosts = posts.sort((a, b) => {
+    return b.createdAt - a.createdAt;
+  });
+
+  const filteredPosts = sortPosts.filter((post) => {
+    const titlePost = post.title.toLowerCase();
+    const textPost = post.text.toLowerCase();
+    const userPost = post.username.toLowerCase();
+    if (
+      titlePost.includes(search.toLowerCase()) ||
+      textPost.includes(search.toLowerCase()) ||
+      userPost.includes(search.toLowerCase())
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const postsCards = currentPosts.map((post) => {
+    var date = new Date(post.createdAt);
     return (
       <PostCard
-      key={post.id}
-      username={post.username}
-      title={post.title}
-      text={post.text}
-      onClick={() => onClickPost(post.id)}
+        key={post.id}
+        title={post.title}
+        votesCount={post.votesCount}
+        username={post.username}
+        createdAt={date.toLocaleDateString()}
+        commentsCount={post.commentsCount}
+        onClickCard={() => onClickCard(post.id)}
+        userVoteDirection={post.userVoteDirection}
+        onClickUpvote={() => upvotePost(post)}
+        onClickDownvote={() => downvotePost(post)}
       />
-    )
-  })
+    );
+  });
 
   return (
-    <Body>
-          <CardForm/>
-          {postCards}
-    </Body>
-  )
-}
+    <ScreenContainer>
+      <InputDiv>
+        <TextField
+          name={"search"}
+          value={search}
+          onChange={setSearch}
+          variant={"outlined"}
+          label={"Search by title, text or username"}
+          fullWidth
+          autoFocus
+          margin={"normal"}
+        />
+      </InputDiv>
+
+      {loading ? <Loader /> : <PostsContainer>{postsCards}</PostsContainer>}
+
+      <Pagination totalPosts={filteredPosts.length} />
+      <AlertModified />
+      <AddPostButton
+        color={"primary"}
+        onClick={() => goToCreatePostPage(history)}
+      >
+        <Add />
+      </AddPostButton>
+    </ScreenContainer>
+  );
+};
+
+export default FeedPage;

@@ -3,7 +3,7 @@ import { ScreenContainer, SignUpButtonContainer } from "./styled";
 import { RegisterForm } from "./RegisterForm";
 import useUnprotectedPage from "../../hooks/useUnprotectedPage";
 
-export const RegisterPage = ({setRightButtonText} ) => {
+const RegisterPage = ({setRightButtonText} ) => {
   useUnprotectedPage()
   return (
     <div>
@@ -13,3 +13,5 @@ export const RegisterPage = ({setRightButtonText} ) => {
     </div>
   )
 }
+
+export default RegisterPage;
