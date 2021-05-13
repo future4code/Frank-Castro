@@ -11,10 +11,6 @@ export const goToLoginPage = (history) => {
     history.replace("/");
   };
   
-  export const goToCreatePostPage = (history) => {
-    history.replace("/createpost");
-  };
-  
   export const goToPostPage = (history, id) => {
     history.push(`/post/${id}`);
   };

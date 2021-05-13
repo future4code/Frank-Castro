@@ -18,13 +18,6 @@ export const PostsContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export const AddPostButton = styled(Fab)`
-  position: fixed !important;
-  right: 20px;
-  bottom: 20px;
-  z-index: 3;
-`;
-
 export const InputDiv = styled.div`
   width: 60vw;
   @media screen and (max-width: 992px) {
@@ -33,4 +26,35 @@ export const InputDiv = styled.div`
   @media screen and (max-width: 600px) {
     width: 90vw;
   }
+`;
+
+export const ScreenContainerCreate = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+`;
+
+export const InputsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  max-width: 450px;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+export const AddPostFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  max-width: 450px;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+export const PostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;

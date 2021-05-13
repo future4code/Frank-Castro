@@ -4,6 +4,8 @@ import {
   PostsContainer,
   AddPostButton,
   InputDiv,
+  ScreenContainerCreate,
+  PostContainer
 } from "./styled";
 import useProtectedPage from "../../hooks/useProtectedPage";
 import PostCard from "../../componetes/PostCard/PostCard";
@@ -12,12 +14,14 @@ import GlobalStateContext from "../../global/GlobalStateContext";
 import axios from "axios";
 import Loader from "../../componetes/Loader";
 import Pagination from "../../componetes/Pagination";
-import { goToCreatePostPage, goToPostPage } from "../../routes/coordinator";
+import { goToPostPage } from "../../routes/coordinator";
 import { useHistory } from "react-router-dom";
 import { Add } from "@material-ui/icons";
 import AlertModified from "../../componetes/Alert";
 import useInput from "../../hooks/useInput";
 import TextField from "@material-ui/core/TextField";
+import CreatePostForm from "./CreatePostForm";
+import Typography from "@material-ui/core/Typography";
 
 const FeedPage = () => {
   useProtectedPage();
@@ -178,6 +182,16 @@ const FeedPage = () => {
 
   return (
     <ScreenContainer>
+      <PostContainer>
+        <Typography
+          gutterBottom
+          variant={"h4"}
+          align={"center"}
+          color={"textPrimary"}
+        >
+        </Typography>
+        <CreatePostForm />
+      </PostContainer>
       <InputDiv>
         <TextField
           name={"search"}
@@ -195,12 +209,6 @@ const FeedPage = () => {
 
       <Pagination totalPosts={filteredPosts.length} />
       <AlertModified />
-      <AddPostButton
-        color={"primary"}
-        onClick={() => goToCreatePostPage(history)}
-      >
-        <Add />
-      </AddPostButton>
     </ScreenContainer>
   );
 };
