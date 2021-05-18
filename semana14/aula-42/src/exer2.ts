@@ -1,0 +1,35 @@
+function obterEstatisticas(numeros: number[]):object {
+
+    const numerosOrdenados = numeros.sort(
+        (a, b) => a - b
+    )
+
+    let soma = 0
+
+    for (let num of numeros) {
+        soma += num
+    }
+
+    const estatisticas = {
+        maior: numerosOrdenados[numeros.length - 1],
+        menor: numerosOrdenados[0],
+        media: soma / numeros.length
+    }
+
+    return estatisticas
+}
+
+//numeros ordenados tipo array de number; soma tipo number; estatisticas tipo objeto
+
+//c) 
+type Amostra = {
+    numeros: number[];
+    obterEstatisticas: (numeros: number[]) => object
+}
+
+const amostraDeIdades = {
+		numeros: [21, 18, 65, 44, 15, 18],
+		obterEstatisticas
+}
+console.log(obterEstatisticas(amostraDeIdades.numeros))
+
