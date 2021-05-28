@@ -17,9 +17,13 @@ app.get('/users', async(req, res) => {
 
 })
 
-app.put('/users', async(req, res) => {
+app.put('/users', async(req:Request, res:Response) => {
 
     try {
+
+        if(!req.body.id || !req.body.name || !req.body.nickname || !req.body.email){
+            throw new Error ("fill in all the information please!")
+        }
         await connection.raw(`
         INSERT INTO user (id, name, nickname, email)
         VALUES (
@@ -32,9 +36,8 @@ app.put('/users', async(req, res) => {
         )
 
         res.status(200).send("sucesso!!")
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send("ERROR")
+    } catch (error) { 
+        return res.status(400).send({message:error.message})
     }
 
 })
@@ -104,7 +107,8 @@ app.put("/users/edit/:id", async (req: Request, res: Response) => {
     app.get("/task/:id", async (req:Request, res:Response) => {
         try {
             const result = await connection.raw(`
-            SELECT * from user AND task WHERE id LIKE "%${req.params.id}%";
+            SELECT task.*, name, nickname from task
+            JOIN user ON user.id = task.creatorUserId WHERE task.id = ${req.params.id};
             `
             );
             res.status(200).send(result[0])
