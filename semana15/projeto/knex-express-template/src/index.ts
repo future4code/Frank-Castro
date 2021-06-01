@@ -21,13 +21,12 @@ app.put('/users', async(req:Request, res:Response) => {
 
     try {
 
-        if(!req.body.id || !req.body.name || !req.body.nickname || !req.body.email){
+        if(!req.body.name || !req.body.nickname || !req.body.email){
             throw new Error ("fill in all the information please!")
         }
         await connection.raw(`
-        INSERT INTO user (id, name, nickname, email)
+        INSERT INTO user (name, nickname, email)
         VALUES (
-            "${req.body.id}",
             "${req.body.name}",
             "${req.body.nickname}",
             "${req.body.email}"
@@ -69,6 +68,19 @@ app.put("/users/edit/:id", async (req: Request, res: Response) => {
     }
   });
 
+  app.delete("/users/:id", async (req: Request, res: Response) => {
+    try {
+      await connection("user")
+        .del("")
+        .where({ id: req.params.id });
+      res.status(200).send("users deleted!");
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send("error");
+    }
+
+  });
+
   //___________________________________________________________________________//
 
   app.get('/task', async(req, res) => {
@@ -86,6 +98,9 @@ app.put("/users/edit/:id", async (req: Request, res: Response) => {
   app.put('/task', async(req, res) => {
 
     try {
+        if(!req.body.title || !req.body.description || !req.body.limitDate || !req.body.creatorUserId){
+            throw new Error ("fill in all the information please!")
+        }
         await connection.raw(`
         INSERT INTO task (title, description, limitDate, creatorUserId)
         VALUES (
@@ -98,8 +113,7 @@ app.put("/users/edit/:id", async (req: Request, res: Response) => {
         )
         res.status(200).send("sucesso!!")
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send("ERROR")
+        return res.status(400).send({message:error.message})
     }
 
 })
@@ -116,5 +130,16 @@ app.put("/users/edit/:id", async (req: Request, res: Response) => {
             res.status(400).send(error.message);
         }
 }) 
+
+    app.get("/task", async (req: Request, res: Response) => {
+        try {
+        const result = await connection("task")
+        .count()
+        .where({creatorUserId : req.query.creatorUserId})
+        res.status(200).send(result[0]);
+        } catch (error) {
+        res.status(400).send(error.message);
+        }
+    });
 
 
