@@ -1,11 +1,15 @@
-import { Request, Response } from "express";
+import { Request, Response, raw } from "express";
 import connection from "../connection";
+import { getTokenData } from "../services/authenticator";
 
 export default async function createUser(
    req: Request,
    res: Response
 ): Promise<void> {
    try {
+
+      const token = req.headers.authorization as string;
+      const verifiedToken = getTokenData(token);
 
       const { name, nickname } = req.body
 
@@ -17,11 +21,16 @@ export default async function createUser(
 
       await connection('to_do_list_users')
          .update({ name, nickname })
-         .where({ id: req.params.id })
+         .where({ id: verifiedToken.id })
 
       res.end()
 
    } catch (error) {
+
+      if(error.message.includes("expired")){
+         res.statusCode = 401;
+         res.send({message:"Unauthorized"})
+      }
 
       if (res.statusCode === 200) {
          res.status(500).end()

@@ -8,5 +8,5 @@ endDate DATE NOT NULL,
 module VARCHAR(255)
 );
 
-INSERT INTO class (`name`, `startDate`, `endDate`,`module`) VALUES ('cruz', '2021/02/01', '2021/08/01', 'back');
-INSERT INTO class (`name`, `startDate`, `endDate`,`module`) VALUES ('Einstein', '2021/08/01', '2022/02/01', 'front');
+INSERT INTO to_do_list_users (`name`, `startDate`, `endDate`,`module`) VALUES ('cruz', '2021/02/01', '2021/08/01', 'back');
+INSERT INTO to_do_list_users (`name`, `startDate`, `endDate`,`module`) VALUES ('Einstein', '2021/08/01', '2022/02/01', 'front');
